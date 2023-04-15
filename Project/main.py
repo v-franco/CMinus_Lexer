@@ -1,8 +1,10 @@
 from globalTypes import *
-from scanner import *
+from lexer import *
 
-fileName = "prueba"
-f = open(fileName + '.tny', 'r')
+
+#sample.c-
+fileName = "sample"
+f = open(fileName + '.c-', 'r')
 program = f.read() 		# lee todo el archivo a compilar
 f.close()                       # cerrar el archivo con programa fuente
 progLong = len(program) 	# longitud original del programa
