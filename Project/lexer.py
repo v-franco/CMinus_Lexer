@@ -2,7 +2,7 @@ from globalTypes import *
 
 lineno = 1
 
-def recibeScanner(prog, pos, long):
+def globales(prog, pos, long):
     global program
     global position
     global programLength
@@ -16,112 +16,243 @@ def reservedLookup(tokenString):
             return TokenType(tokenString)
     return TokenType.ID
 
+
 def getToken(imprime = True):
     global position, lineno
     tokenString = "" # string for storing token
     currentToken = None # is a TokenType value
     state = StateType.START # current state - always begins at START
     save = True # flag to indicate save to tokenString
-    while (state != StateType.DONE):
+    
+    M = [[1,3,0,24,22,20,42,12,16,9,5,26,28,30,32,34,36,38,40,1000],
+    [1,999,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1000],
+    [999,3,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1000],
+    [6,6,6,6,6,6,6,6,6,6,7,6,6,6,6,6,6,6,6,6],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1000],
+    [8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1000],
+    [999,999,999,999,999,999,999,999,999,999,10,999,999,999,999,999,999,999,999,999],
+    [11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1000],
+    [13,13,13,13,13,13,13,13,13,13,14,13,13,13,13,13,13,13,13,13],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1000],
+    [15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1000],
+    [17,17,17,17,17,17,17,17,17,17,18,17,17,17,17,17,17,17,17,17],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1000],
+    [19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1000],
+    [21,21,21,21,21,21,21,21,21,21,21,21,21,21,21,21,21,21,21,21],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1000],
+    [23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1000],
+    [25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1000],
+    [27,27,27,27,27,27,27,27,27,27,27,27,27,27,27,27,27,27,27,27],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1000],
+    [29,29,29,29,29,29,29,29,29,29,29,29,29,29,29,29,29,29,29,29],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1000],
+    [31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1000],
+    [33,33,33,33,33,33,33,33,33,33,33,33,33,33,33,33,33,33,33,33],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1000],
+    [35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1000],
+    [37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1000],
+    [39,39,39,39,39,39,39,39,39,39,39,39,39,39,39,39,39,39,39,39],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1000],
+    [41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1000],
+    [43,43,43,43,43,44,43,43,43,43,43,43,43,43,43,43,43,43,43,43],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1000],
+    [44,44,44,44,44,45,44,44,44,44,44,44,44,44,44,44,44,44,44,44],
+    [44,44,44,44,44,44,46,44,44,44,44,44,44,44,44,44,44,44,44,44],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1000],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1000]]
+    estado = 0
+    lex = ''
+    token = ''
+
+    while (token == ""):
         c = program[position]
-        save = True
-        if state == StateType.START:
-            if c.isdigit():
-                state = StateType.INNUM
-            elif c.isalpha():
-                state = StateType.INID
-            elif c == ':':
-                state = StateType.INASSIGN
-            elif ((c == ' ') or (c == '\t') or (c == '\n')):
-                save = False
-                if (c == '\n'):
-                    #print("línea: ", lineno)
-                    lineno += 1 # incrementa el número de línea
-            elif c == '{':
-                save = False
-                state = StateType.INCOMMENT
-            else:
-                state = StateType.DONE
-                if position == programLength: #EOF
-                    save = False
-                    currentToken = TokenType.ENDFILE
-                elif c == '=':
-                    currentToken = TokenType.EQ
-                elif c == '<':
-                    currentToken = TokenType.LT
-                elif c == '+':
-                    currentToken = TokenType.PLUS
-                elif c == '-':
-                    currentToken = TokenType.MINUS
-                elif c == '*':
-                    currentToken = TokenType.TIMES
-                elif c == '/':
-                    currentToken = TokenType.OVER
-                elif c == '(':
-                    currentToken = TokenType.LPAREN
-                elif c == ')':
-                    currentToken = TokenType.RPAREN
-                elif c == ';':
-                    currentToken = TokenType.SEMI
-                else:
-                    currentToken = TokenType.ERROR
-        elif state == StateType.INCOMMENT:
-            save = False
-            if position == programLength: #EOF
-                state = StateType.DONE
-                currentToken = TokenType.ENDFILE
-            elif c == '}':
-                state = StateType.START
-            elif c == '\n':
-                #print("línea: ", lineno)
+        if c.isdigit():
+            col = 0
+        elif c.isalpha():
+            col = 1
+        elif (c == ' ') or (c == '\t') or (c == '\n'):
+            col = 2
+            if (c == "\n"):
                 lineno += 1
-        elif state == StateType.INASSIGN:
-            state = StateType.DONE
-            if c == '=':
-                currentToken = TokenType.ASSIGN
+        elif c == "+":
+            col = 3
+        elif c == "-":
+            col = 4
+        elif c == '*':
+            col = 5
+        elif c == '/':
+            col = 6
+        elif c == "<":
+            col = 7
+        elif c == ">":
+            col = 8
+        elif c == "!":
+            col = 9
+        elif c == "=":
+            col = 10
+        elif c == ";":
+            col = 11
+        elif c == ",":
+            col = 12
+        elif c == "(":
+            col = 13
+        elif c == ")":
+            col = 14
+        elif c == "[":
+            col = 15
+        elif c == "]":
+            col = 16
+        elif c == "{":
+            col = 17
+        elif c == "}":
+            col = 18
+        elif c == "$":
+            col = 19
+
+ 
+        estado = M[estado][col]
+        if estado == 2:
+            token = TokenType.INT
+            lex += c
+            estado = 0
+            position -= 1
+        elif estado == 4:
+            token = TokenType.ID
+            lex += c
+            estado = 0 
+            position -= 1
+            token = reservedLookup(lex[:-1])
+        elif estado == 6:
+            token = TokenType.ASSIGN
+            lex += c
+            estado = 0
+            position -= 1
+        elif estado == 8:
+            token = TokenType.EQUAL_TO
+            lex += c
+            estado = 0
+            position -= 1
+        elif estado == 11:
+            token = TokenType.NOT_EQUAL_TO
+            lex += c
+            estado = 0
+        elif estado == 13:
+            token = TokenType.LESS_THAN
+            lex += c
+            estado = 0
+        elif estado == 15:
+            token = TokenType.LESS_OR_EQUAL_TO
+            lex += c
+            estado = 0
+        elif estado == 17:
+            token = TokenType.MORE_THAN
+            lex += c
+            estado = 0
+        elif estado == 18:
+            token = TokenType.MORE_OR_EQUAL_TO
+            lex += c
+            estado = 0
+        elif estado == 21:
+            token = TokenType.TIMES
+            lex += c
+            estado = 0
+            position -= 1
+        elif estado == 23:
+            token = TokenType.MINUS
+            lex += c
+            estado = 0
+            position -= 1
+        elif estado == 25:
+            token = TokenType.PLUS
+            lex += c
+            estado = 0
+            position -= 1
+        elif estado == 27:
+            token = TokenType.SEMI
+            lex += c
+            estado = 0
+            position -= 1
+        elif estado == 29:
+            token = TokenType.COMMA
+            lex += c
+            estado = 0
+            position -= 1
+        elif estado == 31:
+            token = TokenType.LPAREN
+            lex += c
+            estado = 0
+            position -= 1
+
+        elif estado == 33:
+            token = TokenType.RPAREN
+            lex += c
+            estado = 0
+            position -= 1
+        elif estado == 35:
+            token = TokenType.LBRACKET
+            lex += c
+            estado = 0
+            position -= 1
+        elif estado == 37:
+            token = TokenType.RBRACKET
+            lex += c
+            estado = 0
+            position -= 1
+        elif estado == 39:
+            token = TokenType.LCURLY
+            lex += c
+            estado = 0
+            position -= 1
+        elif estado == 41:
+            token = TokenType.RCURLY
+            lex += c
+            estado = 0
+            position -= 1
+        elif estado == 43:
+            token = TokenType.SLASH
+            lex += c
+            estado = 0
+            position -= 1
+        elif estado == 46:
+            token = TokenType.COMMENT
+            lex += c
+            estado = 0
+        elif estado == 999:
+            token = TokenType.ERROR
+            lex += c
+            estado = 0
+        elif estado == 1000:
+            token = TokenType.ENDFILE
+            lex = "$"
+            print("Line: ", lineno, token, lex)
+
+
+        if (token != "" and token != TokenType.ENDFILE): 
+            lex = str(lex)
+            if (token != TokenType.ID or token != TokenType.NUM or token != TokenType.COMMENT):
+                print("Line: ", lineno, token, lex[:-1])
+                print("\n")
             else:
-                # backup in the input
-                if position <= programLength:
-                    position -= 1 # ungetNextChar()
-                save = False
-                currentToken = TokenType.ERROR
-        elif state == StateType.INNUM:
-            if not c.isdigit():
-                # backup in the input
-                if position <= programLength:
-                    position -= 1 # ungetNextChar()
-                save = False
-                state = StateType.DONE
-                currentToken = TokenType.NUM
-        elif state == StateType.INID:
-            if not c.isalpha():
-                # backup in the input
-                if position <= programLength:
-                    position -= 1 # ungetNextChar()
-                save = False
-                state = StateType.DONE
-                currentToken = TokenType.ID
-        elif state == StateType.DONE:
-            None
-        else: # should never happen
-            print('Scanner Bug: state= '+str(state))
-            state = StateType.DONE
-            currentToken = TokenType.ERROR
-        if save:
-            tokenString = tokenString + c
-        if state == StateType.DONE:
-            if currentToken == TokenType.ID:
-                currentToken = reservedLookup(tokenString)
+                print("Line: ", lineno, token, lex)
+                print("\n")
+            lex = ""
         position += 1
-    if imprime:
-        print(lineno, currentToken," = ", tokenString) # prints a token and its lexeme
-    #print("CURRENT:", currentToken, lineno)
-    return currentToken, tokenString, lineno
+        if estado != 0:
+            lex += c
+        #print(lineno)
 
-#f = open('prueba.tny', 'r')
-##f = open('sample.tny', 'r')
-#program = f.read() # lee todo el archivo a compilar
-#programLength = len(program) # original program length
-#program = program + '$' # add a character to represente EOF
-#position = 0 # the position of the current char in file
-
+    return token, tokenString, lineno
+            
+        

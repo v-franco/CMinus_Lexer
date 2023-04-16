@@ -1,5 +1,5 @@
-from globalTypes import *
-from scanner import *
+from globalTypes1 import *
+from scanner1 import *
 
 fileName = "prueba"
 f = open(fileName + '.tny', 'r')
