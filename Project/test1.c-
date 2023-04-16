@@ -1,6 +1,6 @@
 /* Un programa para realizar el algoritmo 
-   de Euclides para calcular mcd. */
-38a;
+   de Euclides para calcular mcd. */547;
+38>=5;
 as38
 55 +-/*;*/ ; * 38
 int
@@ -24,4 +24,8 @@ void main(void)
     int x; int y;
     x = input(); y = input();
     output (gcd (x,y));
+    contador = contador + 3indice;
+    !igual;
+    3158a;
+    Rizz4;
 }

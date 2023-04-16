@@ -1,7 +1,7 @@
 from globalTypes1 import *
 from scanner1 import *
 
-fileName = "prueba"
+fileName = "sample"
 f = open(fileName + '.tny', 'r')
 program = f.read() 		# lee todo el archivo a compilar
 f.close()                       # cerrar el archivo con programa fuente
