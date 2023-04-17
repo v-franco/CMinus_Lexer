@@ -1,5 +1,5 @@
-#Programa Lexer 
-#Realizado por:
+# Programa Lexer 
+# Realizado por:
 # Juan Pablo Ortiz Ortega A01366969 
 # Victor Hugo Franco Juárez A01366475
 
@@ -7,11 +7,11 @@
 from globalTypes import *
 
 
-lineno = 1 #almacena el no. de lineas
-isError = True #Bandera de error para validar la posición del error
+lineno = 1 # almacena el no. de lineas
+isError = True # Bandera de error para validar la posición del error
 
 
-#función globales() recibe del main.py el programa, la posición del lexer, y la longitud
+# función globales() recibe del main.py el programa, la posición del lexer, y la longitud
 def globales(prog, pos, long):
     global program
     global position
@@ -21,7 +21,7 @@ def globales(prog, pos, long):
     programLength = long
 
 
-#función reservedLookup() recibe el string de un token ID para validar si no es una palabra reservada
+# función reservedLookup() recibe el string de un token ID para validar si no es una palabra reservada
 def reservedLookup(tokenString):
     for w in ReservedWords:
         if tokenString == w.value:
@@ -29,9 +29,9 @@ def reservedLookup(tokenString):
     return TokenType.ID
 
 
-#fucnión printError imprime el mensaje de error y la posición con el acent circunflejo indicando el error
-#Recibe la línea, la posición del error, y sí el error es en la formación de un token NOT_EQUAL_TO
-def printError(line, errorPosi, isNot):
+# fucnión printError imprime el mensaje de error y la posición con el acent circunflejo indicando el error
+# Recibe la línea, la posición del error, y sí el error es en la formación de un token NOT_EQUAL_TO
+def printError(line, errorPosi, errorType):
     global isError 
     currLine = 0
     line -= 1
@@ -40,6 +40,8 @@ def printError(line, errorPosi, isNot):
     currPos = 0 #Final de la línea
     errorLineLen = 0
     errorSpaces = ""
+    # Se encuentra la línea en donde se encuentra el error y consigue la longitud de la línea, así como 
+    # la posición del final de esta
     for i in (program):
         if (i == "\n"):
             currLine += 1
@@ -50,11 +52,12 @@ def printError(line, errorPosi, isNot):
         if (currLine > line):
             break
         currPos += 1
-    #currPos += 2
+    # Cálculo de la posición del acento circunflejo según la longitud de la línea y dónde
+    # se encontró el error
     circumPos = errorLineLen - (currPos - errorPosi)
     errorSpaces = " " * circumPos
     print(lineString)
-    if(isNot == 1):
+    if(errorType == 1):
         print(errorSpaces[:-1], "^","\n")
     else:
         print(errorSpaces[:-2], "^","\n")
@@ -63,13 +66,13 @@ def printError(line, errorPosi, isNot):
     
 
                 
-#Funcion getToken identifica e imprime los tokens del programa en C-
-#Utiliza matriz de estados obtenida de un automata
+# Funcion getToken identifica e imprime los tokens del programa en C-
+# Utiliza matriz de estados obtenida de un automata
 def getToken(imprime = True):
     global position, lineno, isError
-    tokenString = "" # string para almacenar token
-    errorPos = 0 #posicion de error
-    isNot = 0 #bool para identificar si el error es en un IS_NOT_EQUAL o no
+    
+    errorPos = 0 # posicion de error
+    errorType = 0 # bool para identificar si el error es en un IS_NOT_EQUAL o no
 
 
     #Matriz de estados generada de un automata
@@ -117,28 +120,37 @@ def getToken(imprime = True):
     [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1000],
     [43,43,43,43,43,44,43,43,43,43,43,43,43,43,43,43,43,43,43,43],
     [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1000],
-    [44,44,44,44,44,45,44,44,44,44,44,44,44,44,44,44,44,44,44,44],
-    [44,44,44,44,44,44,46,44,44,44,44,44,44,44,44,44,44,44,44,44],
+    [44,44,44,44,44,45,44,44,44,44,44,44,44,44,44,44,44,44,44,999],
+    [44,44,44,44,44,44,46,44,44,44,44,44,44,44,44,44,44,44,44,999],
     [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1000],
     [47,47,999,999,999,999,999,999,999,999,10,999,999,999,999,999,999,999,999,999],
     [48,48,999,999,999,999,999,999,999,999,10,999,999,999,999,999,999,999,999,999],
     [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1000]]
 
-    estado = 0 #estado de acuerdo con la matriz
-    lex = '' #lexema 
+    estado = 0 # estado de acuerdo con la matriz
+    lex = '' # lexema 
     token = '' #token identificado
 
     while (token == ""):
-        c = program[position]
-        
+        c = program[position] #carácter actual
+
+        # Condición especial para comentarios no cerrados
+        if (estado == 44 or estado == 45):
+            auxLex = lex 
+            auxLex += c
+            if ("$" in auxLex):
+                print("Line:",lineno, "ERROR comentario no cerrado")
+
+        # Determina columna de la matriz dependiendo del carácter
         if c.isdigit():
             col = 0
         elif c.isalpha():
             col = 1
         elif ((c == ' ') or (c == '\t') or (c == '\n')):
             col = 2
+            # Detecta un salto de línea y se suma "uno" al contador de líneas
             if (c == "\n"):
-                lineno += 1
+                lineno += 1 
         elif c == "+":
             col = 3
         elif c == "-":
@@ -174,8 +186,10 @@ def getToken(imprime = True):
         elif c == "$":
             col = 19
 
- 
+        # Cambio de estado según la matriz
         estado = M[estado][col]
+
+        # Validación de estados finales (Detección de tokens o error)
         if estado == 2:
             token = TokenType.INT
             lex += c
@@ -186,7 +200,7 @@ def getToken(imprime = True):
             lex += c
             estado = 0 
             position -= 1
-            token = reservedLookup(lex[:-1])
+            token = reservedLookup(lex[:-1]) #Valida sí el ID es una palabra reservada
         elif estado == 6:
             token = TokenType.ASSIGN
             lex += c
@@ -286,18 +300,21 @@ def getToken(imprime = True):
             lex += "/"
             if (c == "\n"):
                 lineno += 1
+
+        # Detección de errores en la generación de tokens NUM, ID, o NOT_EQUAL_TO
         elif ((estado == 47 or estado == 48 or c == "!") and isError == True):
             errorPos = position
             isError = False
             if (c == "!"):
-                isNot = 1
+                errorType = 1
 
         elif estado == 999:
             token = TokenType.ERROR
             lex += c
             estado = 0
             position -= 1
-            
+
+        # Detección del token ENDFILE   
         elif estado == 1000:
             token = TokenType.ENDFILE
             lex = "$"
@@ -306,17 +323,21 @@ def getToken(imprime = True):
         if estado != 0:
             lex += c
 
+    # Se resta "uno" a el número de líneas al encontrar un token para evitar que este sea leído más
+    # de una vez
     if (c == "\n"):
         lineno -= 1
 
     if (token != "" and token != TokenType.ENDFILE): 
             lex = str(lex)
+            # Impresión del token y el lexema, así como la línea en que se encontró
             if (token != TokenType.ERROR):
                 if (token != TokenType.ID or token != TokenType.NUM or token != TokenType.COMMENT):
                     print("Line:", lineno, " ", token, lex[:-1])
                 else:
                     print("Line:", lineno," ", token, lex)
             else:
+                # Impresión de la línea en que se encontró un error
                 print("\n")
                 if (lex[0].isdigit()):  
                     print("Line:",lineno, "ERROR al generar un token NUM")
@@ -324,9 +345,9 @@ def getToken(imprime = True):
                     print("Line:",lineno, "ERROR al generar un token ID o palabra reservada")
                 if (lex[0]=="!"):
                     print("Line:",lineno, "ERROR al generar un token NOT_EQUAL_TO")
-                printError(lineno, errorPos, isNot)
+                printError(lineno, errorPos, errorType)
             lex = ""
-    
-    return token, tokenString, lineno
+    # Se regresa el token, lexema y número de línea
+    return token, lex, lineno
             
         

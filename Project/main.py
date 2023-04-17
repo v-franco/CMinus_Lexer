@@ -3,7 +3,7 @@ from lexer import *
 
 
 #sample.c-
-fileName = "test2"
+fileName = "test1"
 f = open(fileName + '.c-', 'r')
 programa = f.read() 		# lee todo el archivo a compilar
 f.close()                       # cerrar el archivo con programa fuente
