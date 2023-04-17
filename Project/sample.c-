@@ -1,13 +1,31 @@
-{ Sample program
-  in TINY language -
-  computes factorial
+/* Un programa para realizar el algoritmo 
+   de Euclides para calcular mcd. */547;
+38>=5;
+as38
+55 +-/*;*/ ; * 38
+int
+else
+return
+while
+
+int gcd (int u, int v)
+
+{ if (v == 0) return u ;
+  else return gcd (v,u-u/v*v);
+  /* u-u/v*v == u mod v */casa
+  x<=u;
+  theta>=x;
+  casa==hogar
+  hola===hola
 }
-read x; { input an integer }
-if 0 < x then { don't compute if x <= 0 }
-  fact := 1;
-  repeat
-    fact := fact * x;
-    x := x - 1
-  until x = 0;
-  write fact  { output factorial of x }
-end
+
+void main(void)
+{
+    int x; int y;
+    x = input(); y = input();
+    output (gcd (x,y));
+    contador = contador + 3indice;
+    !igual;
+    3158a;
+    Rizz4;
+}

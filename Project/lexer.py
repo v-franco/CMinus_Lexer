@@ -347,7 +347,7 @@ def getToken(imprime = True):
                     print("Line:",lineno, "ERROR al generar un token NOT_EQUAL_TO")
                 printError(lineno, errorPos, errorType)
             lex = ""
-    # Se regresa el token, lexema y número de línea
-    return token, lex, lineno
+    # Se regresa el token y lexema
+    return token, lex
             
         
