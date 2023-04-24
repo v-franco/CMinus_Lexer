@@ -68,7 +68,7 @@ def printError(line, errorPosi, errorType):
                 
 # Funcion getToken identifica e imprime los tokens del programa en C-
 # Utiliza matriz de estados obtenida de un automata
-def getToken(imprime = True):
+def getToken(imprime):
     global position, lineno, isError
     
     errorPos = 0 # posicion de error
@@ -138,7 +138,7 @@ def getToken(imprime = True):
         if (estado == 44 or estado == 45):
             auxLex = lex 
             auxLex += c
-            if ("$" in auxLex):
+            if ("$" in auxLex and imprime == True):
                 print("Line:",lineno, "ERROR comentario no cerrado")
 
         # Determina columna de la matriz dependiendo del carácter
@@ -318,7 +318,8 @@ def getToken(imprime = True):
         elif estado == 1000:
             token = TokenType.ENDFILE
             lex = "$"
-            print("Line:", lineno," ", token, lex)
+            if(imprime==True):
+                print("Line:", lineno," ", token, lex)
         position += 1
         if estado != 0:
             lex += c
@@ -328,7 +329,7 @@ def getToken(imprime = True):
     if (c == "\n"):
         lineno -= 1
 
-    if (token != "" and token != TokenType.ENDFILE): 
+    if (token != "" and token != TokenType.ENDFILE and imprime == True): 
             lex = str(lex)
             # Impresión del token y el lexema, así como la línea en que se encontró
             if (token != TokenType.ERROR):
