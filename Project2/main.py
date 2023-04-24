@@ -50,11 +50,11 @@ def prepareTexts():
     bagB = secondText.split(' ')
     unique = set(bagA).union(set(bagB))
 
-    dictA = dict.fromkeys(bagA, 0)
+    dictA = dict.fromkeys(unique, 0)
     for token in bagA:
         dictA[token]+=1
 
-    dictB = dict.fromkeys(bagB, 0)
+    dictB = dict.fromkeys(unique, 0)
     for token in bagB:
         dictB[token]+=1
     
