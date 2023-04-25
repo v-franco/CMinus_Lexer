@@ -8,51 +8,60 @@ from sklearn.metrics.pairwise import cosine_similarity
 import numpy as np
 import math
 
-firstText = ""
-secondText = ""
+firstCode = "" 
+secondCode = ""
 bagA = ""
 bagB = ""
-unique = ""
+mixedBag = ""
 dictA = {}
 dictB = {}
 
+
+#Función openCode abre ambos programas a comparar y los almacena en sus respectivas variables
 def openCode(codeNo):
-    global firstText
-    global secondText
+    global firstCode
+    global secondCode
     #Abre programa 1 a revisar
     if codeNo == 1:
         f = open('program1.c-', 'r')
         programa = f.read() 		# lee todo el archivo a compilar
+    #Abre programa 2 a revisar
     elif codeNo == 2: 
         f = open('program2.c-', 'r')
         programa = f.read() 		# lee todo el archivo a compilar
-    progLong = len(programa) 	# longitud original del programa
-    programa = programa + '$' 	# agregar un caracter $ que represente EOF
-    posicion = 0 			# posición del caracter actual del string
+
+    #Variables usadas por el lexer
+    progLong = len(programa) 
+    programa = programa + '$' 	
+    posicion = 0 			
 
     # función para pasar los valores iniciales de las variables globales
     globales(programa, posicion, progLong)
 
+
+    #Usa el lexer para obtener todos los tokens de los programas y los almacena en sus respectivos strings
     token, tokenString = getToken(False)
     while (token != TokenType.ENDFILE):
         token, tokenString = getToken(False)
         if(codeNo) == 1:
-            firstText+=str(token)+" "
+            firstCode+=str(token)+" "
         elif(codeNo) == 2:
-            secondText+=str(token)+" "
+            secondCode+=str(token)+" "
 
 
+#Función prepareTexts prepara los programas recibidos, generando una bolsa de palabras por cada programa, una bolsa con todos los tokens de ambos programas
 def prepareTexts():
-    global bagA, bagB, firstText, secondText, unique, dictA, dictB
-    bagA = firstText.split(' ')
-    bagB = secondText.split(' ')
-    unique = set(bagA).union(set(bagB))
-
-    dictA = dict.fromkeys(unique, 0)
+    global bagA, bagB, firstCode, secondCode, mixedBag, dictA, dictB
+    bagA = firstCode.split(' ')
+    bagB = secondCode.split(' ')
+    #mixedBag = set(bagA).union(set(bagB))
+    mixedBag = {"","TokenType.INT","TokenType.ENDFILE","TokenType.ERROR","TokenType.IF","TokenType.ELSE","TokenType.RETURN","TokenType.VOID","TokenType.WHILE","TokenType.INPUT","TokenType.OUTPUT","TokenType.ID", "TokenType.NUM", "TokenType.EQUAL_TO","TokenType.ASSIGN","TokenType.NOT_EQUAL_TO","TokenType.LESS_THAN","TokenType.LESS_OR_EQUAL_THAN","TokenType.MORE_THAN","TokenType.MORE_OR_EQUAL_THAN","TokenType.PLUS","TokenType.MINUS","TokenType.TIMES","TokenType.SLASH","TokenType.LPAREN","TokenType.RPAREN","TokenType.LBRACKET","TokenType.RBRACKET","TokenType.LCURLY","TokenType.RCURLY","TokenType.SEMI","TokenType.COMMENT","TokenType.COMMA","TokenType.CLOSE_COMMENT"}
+    #print(mixedBag)
+    dictA = dict.fromkeys(mixedBag, 0)
     for token in bagA:
         dictA[token]+=1
 
-    dictB = dict.fromkeys(unique, 0)
+    dictB = dict.fromkeys(mixedBag, 0)
     for token in bagB:
         dictB[token]+=1
     
@@ -73,9 +82,8 @@ def IDF(programs):
         for token, value in program.items():
             if value > 0:
                 idfDict[token] += 1
-    
     for token, value in idfDict.items():
-        idfDict[token] = math.log((N / float(value))+1)
+        idfDict[token] = math.log((1+N / 1+float(value))+1)
     
     return idfDict
 
@@ -94,37 +102,52 @@ def dictToArray(dictionary):
     numpyArray = np.array([dictList])
 
     return numpyArray
-    
 
 
-def main():
-    global firstText
+def calculateTFIDF():
+    global firstCode
     openCode(1)
-    #print("First text saved:", firstText)
     openCode(2)
-    #print("Second text saved:", firstText)
     prepareTexts()
-    tf1 = TF(dictA, bagA)
-    tf2 = TF(dictB, bagB)
-
-    #print(tf1)
-    #print(tf2)
-
+    firstTF = TF(dictA, bagA)
+    secondTF = TF(dictB, bagB)
 
     idfs = IDF([dictA, dictB])
 
-    firstTfidf = TFIDF(tf1, idfs)
-    secondTfidf = TFIDF(tf2, idfs)
+    firstTFIDF = TFIDF(firstTF, idfs)
+    secondTFIDF = TFIDF(secondTF, idfs)
 
-    finalArray1 = dictToArray(firstTfidf)
-    finalArray2 = dictToArray(secondTfidf)
+    finalArray1 = dictToArray(firstTFIDF)
+    finalArray2 = dictToArray(secondTFIDF)
 
 
     cosine = cosine_similarity(finalArray1,finalArray2)
 
-    print(cosine)
+    print("Similaridad de coseno usando TF-IDF:",cosine)
 
-    #VECTORES TIENEN QUE TENER EL MISMO TAMAÑO
+def calculateTF():
+    global firstCode
+    openCode(1)
+
+    openCode(2)
+
+    prepareTexts()
+    firstTF = TF(dictA, bagA)
+    secondTF = TF(dictB, bagB)
+
+    finalArray1 = dictToArray(firstTF)
+    finalArray2 = dictToArray(secondTF)
+
+
+    cosine = cosine_similarity(finalArray1,finalArray2)
+
+    print("Similaridad de coseno usando TF:",cosine)
+
+
+def main():
+    calculateTFIDF()
+    calculateTF()
+
 
 if __name__ == "__main__":
     main()
