@@ -6,6 +6,9 @@ from globalTypes import *
 from lexer import *
 from sklearn.metrics.pairwise import cosine_similarity
 import numpy as np
+import pandas as pd
+from sklearn.feature_extraction.text import TfidfVectorizer
+from numpy.linalg import norm
 import math
 
 firstText = ""
@@ -65,33 +68,11 @@ def TF(dictionary, bag):
     return tfDict
 
 
-def IDF(programs):
-    N = len(programs)
-    idfDict = {}
-    idfDict = dict.fromkeys(programs[0].keys(), 0)
-    for program in programs:
-        for token, value in program.items():
-            if value > 0:
-                idfDict[token] += 1
-    
-    for token, value in idfDict.items():
-        idfDict[token] = math.log((N / float(value))+1)
-    
-    return idfDict
-
-def TFIDF(tfBag, idfs):
-    tfidf = {}
-    for token, value in tfBag.items():
-        tfidf[token] = value * idfs[token]
-
-    return tfidf
-
-
 def dictToArray(dictionary):
 
     dictList = list(dictionary.values())
 
-    numpyArray = np.array([dictList])
+    numpyArray = np.array(dictList)
 
     return numpyArray
     
@@ -110,17 +91,13 @@ def main():
     #print(tf1)
     #print(tf2)
 
-
-    idfs = IDF([dictA, dictB])
-
-    firstTfidf = TFIDF(tf1, idfs)
-    secondTfidf = TFIDF(tf2, idfs)
-
-    finalArray1 = dictToArray(firstTfidf)
-    finalArray2 = dictToArray(secondTfidf)
+    finalArray1 = dictToArray(tf1)
+    finalArray2 = dictToArray(tf2)
 
 
-    cosine = cosine_similarity(finalArray1,finalArray2)
+
+
+    cosine = np.dot(finalArray1,finalArray2)/(norm(finalArray1)*norm(finalArray2))
 
     print(cosine)
 
