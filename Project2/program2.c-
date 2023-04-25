@@ -1,19 +1,10 @@
-/* Un programa para realizar ordenación por
-selección en un arreglo de 10 elementos. */
-int x[10];
-
-int minloc ( int a[], int low, int high )
-{ int i; int x; int k;
-  k = low;
-  x = a[low];
-  i = low + 1;
-  while (i < high)
-  { if (a[i] < x)
-      { x = a[i];
-        k = i;  }
-    i = i + 1;
-  }
-  return k;
+int mcd (int div, int divisor)
+{   if (divisor == 0) return div ; 
+    else return mcd (divisor, div-div/divisor*divisor); 
 }
 
-void sort( int a[], int low, int high)
+void main(void)
+{ int numberA; int numberB;
+numberA= input(); numberB = input(); 
+output (mcd (numberA,numberB));
+}

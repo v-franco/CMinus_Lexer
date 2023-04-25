@@ -96,7 +96,11 @@ def IDF(programs):
             if value > 0:
                 idfDict[token] += 1
     for token, value in idfDict.items():
-        idfDict[token] = math.log((1+N / 1+float(value))+1) #+1 obtenido de scikit learn
+        if value == 0:
+            idfDict[token] = 0.0
+        else:
+            idfDict[token] = math.log((N / float(value))+1) #+1 obtenido de scikit learn
+            #idfDict[token] = math.log((1+N / 1+float(value))+1)
     
     return idfDict
 
@@ -136,7 +140,6 @@ def calculate(method):
     secondTF = TF(dictB, bagB)
 
     #Si method = 1, calcula el TF-IDF e imprime la comparación de cosenos usando TF-IDF
-    #Si method = 2, imprime la comparación de cosenos usando TF
     if method == 1:
         idfs = IDF([dictA, dictB])
 
@@ -151,10 +154,10 @@ def calculate(method):
 
         print("Similaridad de coseno usando TF-IDF:",cosine)
 
+    #Si method = 2, imprime la comparación de cosenos usando TF
     if method == 2:
         finalArray1 = dictToArray(firstTF)
         finalArray2 = dictToArray(secondTF)
-
 
         cosine = cosine_similarity(finalArray1,finalArray2)
 
