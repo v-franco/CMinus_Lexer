@@ -61,11 +61,10 @@ def prepareTexts():
     mixedBag = {"","TokenType.INT","TokenType.ENDFILE","TokenType.ERROR","TokenType.IF","TokenType.ELSE",
                 "TokenType.RETURN","TokenType.VOID","TokenType.WHILE","TokenType.INPUT","TokenType.OUTPUT",
                 "TokenType.ID", "TokenType.NUM", "TokenType.EQUAL_TO","TokenType.ASSIGN","TokenType.NOT_EQUAL_TO",
-                "TokenType.LESS_THAN","TokenType.LESS_OR_EQUAL_THAN","TokenType.MORE_THAN",
-                "TokenType.MORE_OR_EQUAL_THAN","TokenType.PLUS","TokenType.MINUS","TokenType.TIMES",
+                "TokenType.LESS_THAN","TokenType.LESS_OR_EQUAL_TO","TokenType.MORE_THAN",
+                "TokenType.MORE_OR_EQUAL_TO","TokenType.PLUS","TokenType.MINUS","TokenType.TIMES",
                 "TokenType.SLASH","TokenType.LPAREN","TokenType.RPAREN","TokenType.LBRACKET","TokenType.RBRACKET",
-                "TokenType.LCURLY","TokenType.RCURLY","TokenType.SEMI","TokenType.COMMENT","TokenType.COMMA",
-                "TokenType.CLOSE_COMMENT"}
+                "TokenType.LCURLY","TokenType.RCURLY","TokenType.SEMI","TokenType.COMMENT","TokenType.COMMA"}
     
     #Llena los diccionarios con el no. de veces que aparece el token en cada programa
     dictA = dict.fromkeys(mixedBag, 0)
@@ -96,11 +95,7 @@ def IDF(programs):
             if value > 0:
                 idfDict[token] += 1
     for token, value in idfDict.items():
-        if value == 0:
-            idfDict[token] = 0.0
-        else:
-            idfDict[token] = math.log((N / float(value))+1) #+1 obtenido de scikit learn
-            #idfDict[token] = math.log((1+N / 1+float(value))+1)
+            idfDict[token] = math.log((1+N / 1+float(value))+1) #+1 obtenido de scikit learn
     
     return idfDict
 

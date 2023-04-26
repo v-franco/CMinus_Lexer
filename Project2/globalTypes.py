@@ -37,7 +37,6 @@ class TokenType(Enum):
     SEMI = ';'
     COMMENT = '/*'
     COMMA = ','
-    CLOSE_COMMENT = '*/'
 
 # ReservedWords
 class ReservedWords(Enum):

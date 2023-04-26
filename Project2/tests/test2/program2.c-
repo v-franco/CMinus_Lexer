@@ -1,0 +1,10 @@
+int mcd (int div, int divisor)
+{   if (divisor == 0) return div ; 
+    else return mcd (divisor, div-div/divisor*divisor); 
+}
+
+void main(void)
+{ int numberA; int numberB;
+numberA= input(); numberB = input(); 
+output (mcd (numberA,numberB));
+}
