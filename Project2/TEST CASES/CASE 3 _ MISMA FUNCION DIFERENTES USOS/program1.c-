@@ -9,7 +9,7 @@ int main()
     b = 57;
 
     if (b-a < 0){
-        print();
+        imprimeError();
     }
     else{
         a = 5;
