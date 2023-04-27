@@ -1,0 +1,17 @@
+void imprimeError()
+{
+    print("Error")
+}
+
+int main()
+{
+    a = 35;
+    b = 57;
+
+    if (b-a < 0){
+        print();
+    }
+    else{
+        a = 5;
+    } 
+}
