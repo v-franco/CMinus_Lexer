@@ -1,5 +1,2 @@
-/* The following program orders three numbers. */
-
-void main(void) {
-  a  + b * c / 78 >= 5
+void main(void) { 
 }
