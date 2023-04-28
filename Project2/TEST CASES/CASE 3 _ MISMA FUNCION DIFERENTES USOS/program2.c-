@@ -1,6 +1,6 @@
 void imprimeError()
 {
-    print("Error")
+    print(Error)
 }
 
 

@@ -1,8 +1,17 @@
-/* Un programa para realizar el algoritmo
-de Euclides para calcular mcd. */
+void imprimeError()
+{
+    print(Error)
+}
 
-int gcd (int u, int v)
-{   if (v == 0) return u ; 
-    else return gcd (v, u-u/v*v); 
-    /* u-u/v⭑y == u mod v */
+int main()
+{
+    a = 35;
+    b = 57;
+
+    if (b-a < 0){
+        imprimeError();
+    }
+    else{
+        a = 5;
+    } 
 }
