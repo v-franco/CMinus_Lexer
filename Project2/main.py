@@ -12,7 +12,7 @@ firstCode = ""
 secondCode = ""
 bagA = ""
 bagB = ""
-mixedBag = ""
+tokenBag = ""
 dictA = {}
 dictB = {}
 
@@ -53,12 +53,12 @@ def openCode(codeNo):
 #Función prepareTexts prepara los programas recibidos, generando una bolsa de palabras por cada programa y 
 # un set con todos los tokens definidos en globalTypes
 def prepareTexts():
-    global bagA, bagB, firstCode, secondCode, mixedBag, dictA, dictB
+    global bagA, bagB, firstCode, secondCode, tokenBag, dictA, dictB
     #Separa todos los tokens de los programas
     bagA = firstCode.split(' ') 
     bagB = secondCode.split(' ')
-    #mixedBag = set(bagA).union(set(bagB))
-    mixedBag = {"","TokenType.INT","TokenType.ENDFILE","TokenType.ERROR","TokenType.IF","TokenType.ELSE",
+    #tokenBag = set(bagA).union(set(bagB))
+    tokenBag = {"","TokenType.INT","TokenType.ENDFILE","TokenType.ERROR","TokenType.IF","TokenType.ELSE",
                 "TokenType.RETURN","TokenType.VOID","TokenType.WHILE","TokenType.INPUT","TokenType.OUTPUT",
                 "TokenType.ID", "TokenType.NUM", "TokenType.EQUAL_TO","TokenType.ASSIGN","TokenType.NOT_EQUAL_TO",
                 "TokenType.LESS_THAN","TokenType.LESS_OR_EQUAL_TO","TokenType.MORE_THAN",
@@ -68,11 +68,11 @@ def prepareTexts():
     
  
     #Llena los diccionarios con el no. de veces que aparece el token en cada programa
-    dictA = dict.fromkeys(mixedBag, 0)
+    dictA = dict.fromkeys(tokenBag, 0)
     for token in bagA:
         dictA[token]+=1
 
-    dictB = dict.fromkeys(mixedBag, 0)
+    dictB = dict.fromkeys(tokenBag, 0)
     for token in bagB:
         dictB[token]+=1
     
